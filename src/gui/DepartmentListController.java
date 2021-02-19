@@ -70,7 +70,7 @@ public class DepartmentListController implements Initializable{
 	}
 	
 	/*Métodos que acessa os serviços, carregar os departamentos
-	 * e apontar os departamentos para o metodo ( ObservableList) 
+	 * e aponta os departamentos para o metodo ( ObservableList) 
 	 */
 	public void updateTableView() {
 		

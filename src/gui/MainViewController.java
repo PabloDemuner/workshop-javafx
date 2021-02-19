@@ -3,6 +3,7 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import application.Main;
 import gui.util.Alerts;
@@ -33,14 +34,20 @@ public class MainViewController implements Initializable {
 		System.out.println("Seller Acionado!");
 	}
 
+	/*
+	 * Expressão Lambda que efetua a ação de inicialização do controller (DepartmentListController)
+	 */
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		loadView2("/gui/DepartmentList.fxml");
+		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
+			controller.setDepartmentService(new DepartmentService());
+			controller.updateTableView();
+		});
 	}
 
 	@FXML
 	public void onMenuItemAboutAction() {
-		loadView("/gui/About.fxml");
+		loadView("/gui/About.fxml", x -> {});
 	}
 
 	@Override
@@ -48,10 +55,15 @@ public class MainViewController implements Initializable {
 
 	}
 
-	private synchronized void loadView(String absoluteName) {
+	/*Função genérica do tipo <T>
+	 * Parametrização com o Consumer<T> para não ter que contruir
+	 *  duas ou mais funções do loadView.
+	 */
+	private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
 
 		try {
 
+			//Função que carrega as janelas
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			VBox vBox = loader.load();
 
@@ -67,6 +79,9 @@ public class MainViewController implements Initializable {
 			mainVBox.getChildren().clear();
 			mainVBox.getChildren().add(mainMenu);
 			mainVBox.getChildren().addAll(vBox.getChildren());
+			
+			T Controller = loader.getController();
+			initializingAction.accept(Controller);
 
 		} catch (IOException e) {
 
@@ -75,7 +90,7 @@ public class MainViewController implements Initializable {
 		}
 	}
 	
-	private synchronized void loadView2(String absoluteName) {
+	/*private synchronized void loadView2(String absoluteName) {
 
 		try {
 
@@ -86,7 +101,7 @@ public class MainViewController implements Initializable {
 			/*Referencia para o ScrollPane
 			 * (getContent) é referencia para o que estiver dentro do ScrollPane que é o VBox
 			 */
-			VBox mainVBox = (VBox) ((ScrollPane)mainScene.getRoot()).getContent();
+			/*VBox mainVBox = (VBox) ((ScrollPane)mainScene.getRoot()).getContent();
 			
 			//Primeiro filho do VBox da janela principal (mainMenu)
 			Node mainMenu = mainVBox.getChildren().get(0);
@@ -105,7 +120,7 @@ public class MainViewController implements Initializable {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 
 		}
-	}
+	}*/
 
 
 }
