@@ -14,4 +14,15 @@ public class Utils {
 		
 		return  (Stage) ((Node)event.getSource()).getScene().getWindow();
 	}
+	
+	//Metodo que converte o valor digitado para inteiro (tryParseToInt)
+	public static Integer tryParseToInt(String str) {
+		try {
+			return Integer.parseInt(str);
+		}
+		catch (NumberFormatException exception) {
+			return null;
+		}
+	}
+	
 }
