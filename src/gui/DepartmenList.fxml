@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox prefHeight="434.0" prefWidth="572.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="gui.MainViewController">
+<VBox prefHeight="434.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
    <children>
       <Label prefHeight="31.0" prefWidth="164.0" text="Department Registration">
          <font>
