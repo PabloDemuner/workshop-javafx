@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DataChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Department;
+import model.exceptions.ValidationException;
 import model.services.DepartmentService;
 
 public class DepartmentFormController implements Initializable{
@@ -58,7 +61,7 @@ public class DepartmentFormController implements Initializable{
 	
 	@FXML
 	public void onBtSaveAction(ActionEvent event) {
-		/*Exceções estã sendo criadas devido as injeções de dependencias
+		/*Excessões estã sendo criadas devido as injeções de dependencias
 		 * Estarem sendo construidas manualmente e não com Container (Framework)
 		 */
 		if (entity == null) {
@@ -74,6 +77,9 @@ public class DepartmentFormController implements Initializable{
 		//Referencia para fechar a janela após salvo ou atualizado o evento
 		Utils.currentStage(event).close();
 	}
+		catch (ValidationException e) {
+			setErrormessages(e.getErrors());;
+		}
 		catch (DbException e) {
 			Alerts.showAlert("Error saving object", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -89,8 +95,19 @@ public class DepartmentFormController implements Initializable{
 	private Department getFormData() {
 		Department obj = new Department();
 		
+		ValidationException exception = new ValidationException("Error de Validação");
+		
 		obj.setId(Utils.tryParseToInt(textId.getText()));
+		//.trim elimina espaços em brancos no nome do departamento
+		if (textName.getText() == null || textName.getText().trim().equals("")) {
+			exception.addError("Nome", "O campo não pode ser vazio.");
+		}
+		
 		obj.setName(textName.getText());
+		
+		if (exception.getErrors().size() > 0) {
+			throw exception;
+		}
 		
 		return obj;
 	}
@@ -121,4 +138,11 @@ public class DepartmentFormController implements Initializable{
 		textName.setText(entity.getName());
 	}
 
+	private void setErrormessages(Map<String, String> errors) {
+		Set<String> fields = errors.keySet();
+		
+		if (fields.contains("Nome")) {
+			labelErrorName.setText(errors.get("Nome"));
+		}
+	}
 }
