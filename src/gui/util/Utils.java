@@ -33,6 +33,15 @@ public class Utils {
 			return null;
 		}
 	}
+	
+	// Metodo que converte o valor digitado para Double (tryParseToDouble)
+		public static Double tryParseToDouble(String str) {
+			try {
+				return Double.parseDouble(str);
+			} catch (NumberFormatException exception) {
+				return null;
+			}
+		}
 
 	public static <T> void formatTableColumnDate(TableColumn<T, Date> tableColumn, String format) {
 		tableColumn.setCellFactory(column -> {
